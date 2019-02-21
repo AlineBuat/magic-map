@@ -30,7 +30,7 @@ while True:
         latitude = 51.4984856
         #longtitude = analogReadFUNCTION(YPin); / TOTAL_Y_CAP * (START_Y - END_Y) + START_Y
         longtitude = -0.1750946
-        URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?radius=100&rankby=prominence&key=AIzaSyA3aYU6UKfZkp8QfafB2WCfouPjxVrFx2A&locatio$
+        URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?radius=100&rankby=prominence&key=AIzaSyA3aYU6UKfZkp8QfafB2WCfouPjxVrFx2A&location="+latitude+","+longtitude
         html=urllib.urlopen(URL)
         htmltext=html.read()
         #htmltext = "TEST\"name\" : \"Imperial College London\",TESTTEST\"name\" : \"Museum\",TESTTEST\"name\" : \"NATAAAA\",TEST"
