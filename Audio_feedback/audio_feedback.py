@@ -1,11 +1,10 @@
 
-#from gpiozero import Button
 import array
 import urllib
 import os
 import struct
 import RPi.GPIO as GPIO
-GPIO.setmode(GPIO.BCM)
+
 
 Radius = 100
 START_Y =51.4966478
@@ -16,69 +15,65 @@ TOTAL_X_CAP =1016
 TOTAL_Y_CAP =762
 X_SCALE = abs(START_X - END_X)/TOTAL_X_CAP
 Y_SCALE = abs(START_Y - END_Y)/TOTAL_Y_CAP
-NUMBER_READOUTS = 5
-#button = Button(23)
-#exit = Button (18)
-#button_road = Button(21)
-GPIO.setup(23, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.setup(18, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.setup(22, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-name = [0,0,0,0,0,0]
 Long = (END_X - START_X) /2 + START_X
 Lat = (END_Y - START_Y) /2 + START_Y
+NUMBER_READOUTS = 5
+name = [0,0,0,0,0,0]
+ROAD_BUFFER = 50
 
-URL_road = "https://roads.googleapis.com/v1/snapToRoads?&interpolate=true&key=AIzaSyA3aYU6UKfZkp8QfafB2WCfouPjxVrFx2A&path="
-#URL_road ="https://roads.googleapis.com/v1/nearestRoads?&key=AIzaSyA3aYU6UKfZkp8QfafB2WCfouPjxVrFx2A&points="
 
-print ("PROGRAM LOADED!\n")
+GPIO.setmode(GPIO.BCM)
+button_places = 22
+button_roads = 23
+button_exit = 18
+GPIO.setup(button_places, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(button_roads, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(button_exit, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+
 print ("IP Adress for SSH:")
 os.system('hostname -I')
 os.system('iwgetid')
 os.system('espeak "Welcome to V I map by Group 12" 2>/dev/null')
 file = open( "/dev/input/mice", "rb" );
-n_file = 0
+URL_road = "https://roads.googleapis.com/v1/snapToRoads?&interpolate=true&key=AIzaSyA3aYU6UKfZkp8QfafB2WCfouPjxVrFx2A&path="
+#URL_road ="https://roads.googleapis.com/v1/nearestRoads?&key=AIzaSyA3aYU6UKfZkp8QfafB2WCfouPjxVrFx2A&points="
+print ("PROGRAM LOADED!\n")
+
 
 
 def places(channel):
-    print ("LOADING DATABASE...")
-    URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?radius="+str(Radius)+"&key=AIzaSyA3aYU6UKfZkp8QfafB2WCfouPjxVrFx2A&location="+str(Lat)+","+str(Long)
-    print URL
+        print ("LOADING DATABASE...")
+        URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?radius="+str(Radius)+"&key=AIzaSyA3aYU6UKfZkp8QfafB2WCfouPjxVrFx2A&location="+str(Lat)+","+str(Long)
+        print URL, "\nPLACES DATABASE UPDATED!\n"
         html=urllib.urlopen(URL)
         htmltext=html.read()
-        #        htmltext = "TEST\"name\" : \"Imperial College London\",TESTTEST\"name\" : \"Museum\",TESTTEST\"name\" : \"NATAAAA\",TEST"
-        print("PLACES DATABASE UPDATED!\n")
         postname = 1
         for i in range(NUMBER_READOUTS+1):
-            phrase =  "\"name\" : \""
+                phrase =  "\"name\" : \""
                 prename = htmltext.find(phrase,postname)
                 postname =  htmltext.find("\"", prename+len(phrase)+1)
                 name[i] = htmltext[prename+len(phrase):postname]
                 if name[i] == "l_attributions":
-                    os.system('espeak "There are no more places nearby" 2>/dev/null')
-                    break
-                        if i == 0:
-                            start_flag = prename
-                                os.system('espeak "{0}, Top {1} places within {2} metres are" 2>/dev/null'.format(name[i],NUMBER_READOUTS,Radius))
-                            else:
-                                print(i),
-                                print(": "),
-                                print(name[i])
-                                os.system('espeak "{0}" 2>/dev/null'.format(name[i]))
+                        os.system('espeak "There are no more places nearby" 2>/dev/null')
+                        break
+                if i == 0:
+                            os.system('espeak "{0}, Top {1} places within {2} metres are" 2>/dev/null'.format(name[i],NUMBER_READOUTS,Radius))
+                else:
+                        print i,": ", name[i]
+                        os.system('espeak "{0}" 2>/dev/null'.format(name[i]))
 def exit(channel):
-    print ("Bye~")
-    print ("IP Adress for SSH:")
-    os.system('hostname -I')
-    os.system('iwgetid')
-    #        file.close()
+        print ("QUITING PROGRAM...\nIP Adress for SSH:")
+        os.system('hostname -I')
+        os.system('iwgetid')
         raise SystemExit
 def roads(channel):
-    global Long
+        global Long
         global Lat
         global URL_road
-        for i in range(50):
-            print "GETTING ROAD DATA BUFFER...",i,"out of 50"
+        for i in range(ROAD_BUFFER):
+                print "GETTING ROAD DATA BUFFER...",i,"out of", ROAD_BUFFER
                 buf = file.read(3)
-                n_file = file
                 x,y = struct.unpack( "bb", buf[1:] );
                 Long += x*X_SCALE
                 Lat += y*Y_SCALE
@@ -93,16 +88,12 @@ def roads(channel):
         postname = 1
         phrase =  "\"placeId\": \""
         prename = htmltext.find(phrase,postname)
-        postname =  htmltext.find("\"", prename+len(phrase)+1)
-        print prename, postname
+        postname = htmltext.find("\"", prename+len(phrase)+1)
         placeId = htmltext[prename+len(phrase):postname]
-        print("Place Id: "),
-        print(placeId)
         URL = "https://maps.googleapis.com/maps/api/place/details/json?&key=AIzaSyA3aYU6UKfZkp8QfafB2WCfouPjxVrFx2A&placeid="+placeId
-        print URL
+        print "Place Id: ", placeId, "\n" , URL, "\nROAD NAME UPDATED!\n"
         html=urllib.urlopen(URL)
         htmltext=html.read()
-        print("ROAD NAME UPDATED!\n")
         postname = 1
         phrase =  "\"long_name\" : \""
         prename = htmltext.find(phrase,postname)
@@ -112,21 +103,14 @@ def roads(channel):
         print(road_address)
         os.system('espeak "{0}" 2>/dev/null'.format(road_address))
 
-GPIO.add_event_detect(22, GPIO.FALLING, callback=places, bouncetime=700)
-GPIO.add_event_detect(18, GPIO.FALLING, callback=exit, bouncetime=700)
-GPIO.add_event_detect(23, GPIO.FALLING, callback=roads, bouncetime=700)
+GPIO.add_event_detect(button_places, GPIO.FALLING, callback=places, bouncetime=700)
+GPIO.add_event_detect(button_exit, GPIO.FALLING, callback=exit, bouncetime=700)
+GPIO.add_event_detect(button_roads, GPIO.FALLING, callback=roads, bouncetime=700)
 
 
 while True:
-    #       URL_road = "https://roads.googleapis.com/v1/snapToRoads?$interpolate=true&key=AIzaSyA3aYU6UKfZkp8QfafB2WCfouPjxVrFx2A&path="
-    #        URL_road ="https://roads.googleapis.com/v1/nearestRoads?&key=AIzaSyA3aYU6UKfZkp8QfafB2WCfouPjxVrFx2A&points="
-    print "1"
         buf = file.read(3)
-        n_file = file
         x,y = struct.unpack( "bb", buf[1:] );
-        #print x, y
         Long += x*X_SCALE
         Lat += y*Y_SCALE
         print ("Coord: x: %8f, y: %8f" % (Long, Lat));
-
-
