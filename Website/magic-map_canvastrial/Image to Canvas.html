@@ -1,0 +1,49 @@
+<html>
+<head>
+<style>
+	body {
+		background-color: ivory;
+		padding:20px;
+	}
+	img {
+		border:1px solid red;
+	}
+</style>
+
+</head>
+
+<body>
+
+<p>Image to use:</p>
+
+<img id="scream" width="400" height="400"
+src="https://maps.googleapis.com/maps/api/staticmap?center=Hammersmith,London&zoom=14&size=400x400&style=feature:road|color:0xab2567&key=AIzaSyA3aYU6UKfZkp8QfafB2WCfouPjxVrFx2A" alt="The Scream">
+
+<p>Canvas:</p>
+
+<canvas id="myCanvas" width="400" height="400"
+style="border:1px solid #d3d3d3;">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+</canvas>
+	
+	
+	<script>
+			// this just makes an image we can test with
+		// it's just an image of a red rectangle
+		window.onload = function() {
+			var canvas = document.getElementById("myCanvas");
+			var ctx = canvas.getContext("2d");
+			var img = document.getElementById("scream");
+			ctx.drawImage(img, 10, 10);
+			
+
+			
+			
+			
+		};
+
+	</script>
+</body>
+
+</html>

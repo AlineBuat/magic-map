@@ -1,0 +1,134 @@
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Magic Map - Add Map</title>
+
+      <!-- Bootstrap core JavaScript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Site styling -->
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+
+    <!-- Colour Picker -->
+    <script src="jscolor.js"></script>
+
+    <script>
+
+  		<!-- Updates the map image -->
+      var url_start = "https://maps.googleapis.com/maps/api/staticmap?center=";
+      var location_in;
+      var zoom_in;
+      var road_colour_in;
+      var key = "AIzaSyA3aYU6UKfZkp8QfafB2WCfouPjxVrFx2A";
+      var url;
+      $(document).ready(function(){
+        $("button").click(function(){
+          location_in = $("#LocationForm").val();
+          zoom_in = $("#ZoomForm").val();
+          roadcolour_in = $("#RoadColourForm").val();
+          url = url_start.concat(location_in, "&zoom=", zoom_in, "&size=680x400&style=feature:road|color:0x", roadcolour_in, "&key=", key)
+          $("#mapurl").html(url);
+            $("#map").attr("src",url);
+        });
+
+      });
+
+    </script>
+
+  	<!-- Colour Picket script -->
+    <style>
+        .full-spectrum .sp-palette {
+      max-width: 200px;
+      }
+    </style>
+    </head>
+
+    <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary static-top">
+      <div class="container">
+        <a class="navbar-brand" href="index.html"><img src="media/logo.png" class="logo" >Magic Map</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">Contact us
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="checkout.html">Checkout <img src="media/cart.png" class="cart"</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Content -->
+    
+    <img src="media/howtoorder.jpeg" class="img-fluid" alt="How to order"><br>
+
+    <div class="container2">
+      <p class="description">
+
+        <!-- Enter location-->
+        	<h1 class="title_description">Enter Location</h1>
+          <br>
+            <div class="md-form active-cyan-2 mb-3">
+              <input id="LocationForm" class="form-control" type="text" placeholder="Search" aria-label="Search">
+              <i class="fas fa-search" aria-hidden="true"></i>
+            </div>
+          </br>
+
+          <!-- Choose Scale-->
+          <h1 class="title_description">Choose scale</h1>
+          <br>
+          <div class="form-group">
+              <select class="form-control" id=ZoomForm>
+                <option value="15">City</option>
+                <option value="14">Sub-urb</option>
+                <option value="13">Country side</option>
+              </select id="ZoomForm">
+            </div>
+          </br>
+
+        <!-- Search-->
+
+        <p class="lead"  align ="center" >
+          <button id="mapsubmit" class="btn btn-primary btn-lg" type="button">Find Map</button>
+        </p>
+        <br>
+
+      <!-- Map display-->
+    	<div>
+    		<img id="map" src="https://maps.googleapis.com/maps/api/staticmap?center=SW72AZ&zoom=14&size=680x400&key=AIzaSyA3aYU6UKfZkp8QfafB2WCfouPjxVrFx2A">
+      </div>
+      <hr>
+
+      <!-- last buttons-->
+      <div class="btn-group btn-group-justified">
+        <p class="lead"  align ="center" >
+          <a href="#" class="btn btn-primary btn-lg">Add new map</a>
+          <a href="checkout.html" class="btn btn-primary btn-lg"> Checkout</a><br>
+        </p>
+      </div>
+    </p>
+  </div>
+
+
+  </body>
+
+</html>
