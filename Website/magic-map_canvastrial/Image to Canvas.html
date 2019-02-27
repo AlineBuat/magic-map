@@ -1,14 +1,21 @@
 <html>
 <head>
-<style>
-	body {
-		background-color: ivory;
-		padding:20px;
-	}
-	img {
-		border:1px solid red;
-	}
-</style>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>From Google Image to Canvas</title>
+	<style>
+		body {
+			background-color: ivory;
+			padding:20px;
+		}
+		img {
+			border:1px solid red;
+		}
+	</style>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.js"></script>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
 
 </head>
 
@@ -16,8 +23,8 @@
 
 <p>Image to use:</p>
 
-<img id="scream" width="400" height="400"
-src="https://maps.googleapis.com/maps/api/staticmap?center=Hammersmith,London&zoom=14&size=400x400&style=feature:road|color:0xab2567&key=AIzaSyA3aYU6UKfZkp8QfafB2WCfouPjxVrFx2A" alt="The Scream">
+<img id="image0" width="400" height="400"
+src="https://maps.googleapis.com/maps/api/staticmap?center=Hammersmith,London&zoom=14&size=400x400&style=feature:road|color:0x640032&key=AIzaSyA3aYU6UKfZkp8QfafB2WCfouPjxVrFx2A" alt="The Scream">
 
 <p>Canvas:</p>
 
@@ -25,25 +32,25 @@ src="https://maps.googleapis.com/maps/api/staticmap?center=Hammersmith,London&zo
 style="border:1px solid #d3d3d3;">
 Your browser does not support the HTML5 canvas tag.
 </canvas>
-</canvas>
-	
-	
-	<script>
-			// this just makes an image we can test with
-		// it's just an image of a red rectangle
-		window.onload = function() {
-			var canvas = document.getElementById("myCanvas");
-			var ctx = canvas.getContext("2d");
-			var img = document.getElementById("scream");
-			ctx.drawImage(img, 10, 10);
-			
 
-			
-			
-			
-		};
+<button id="change-Color">Change Color</button>
 
-	</script>
+
+	
+<!--<script>-->
+		<!--// this just makes an image we can test with-->
+	<!--// it's just an image of a red rectangle-->
+	<!--window.onload = function() {-->
+		<!--var canvas = document.getElementById("myCanvas");-->
+		<!--var ctx = canvas.getContext("2d");-->
+		<!--var img = document.getElementById("image0");-->
+		<!--ctx.drawImage(img, 0, 0);-->
+	<!--};-->
+
+<!--</script>-->
+
+	<script src="chg_textures_v1.js"></script>
+
 </body>
 
 </html>

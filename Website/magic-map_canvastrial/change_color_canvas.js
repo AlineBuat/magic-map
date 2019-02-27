@@ -1,0 +1,55 @@
+// this just makes an image we can test with
+// it's just an image of a red rectangle
+var temp = document.createElement("canvas");
+var tempctx = temp.getContext("2d");
+tempctx.fillStyle = "red";
+tempctx.strokeStyle = "blue";
+tempctx.lineWidth = 5;
+tempctx.rect(20, 20, 75, 50);
+tempctx.fill();
+tempctx.stroke();
+var image0 = document.getElementById("image0");
+image0.src = temp.toDataURL();
+
+var image = new Image();
+image.onload = function () {
+    // replace red with green
+    recolorImage(image, 171, 37, 103, 0, 255, 0);
+}
+image.src = image0.src;
+
+
+function recolorImage(img, oldRed, oldGreen, oldBlue, newRed, newGreen, newBlue) {
+
+    var c = document.createElement('canvas');
+    var ctx = c.getContext("2d");
+    var w = img.width;
+    var h = img.height;
+
+    c.width = w;
+    c.height = h;
+
+    // draw the image on the temporary canvas
+    ctx.drawImage(img, 0, 0, w, h);
+
+    // pull the entire image into an array of pixel data
+    var imageData = ctx.getImageData(0, 0, w, h);
+
+    // examine every pixel,
+    // change any old rgb to the new-rgb
+    for (var i = 0; i < imageData.data.length; i += 4) {
+        // is this pixel the old rgb?
+        if (imageData.data[i] == oldRed && imageData.data[i + 1] == oldGreen && imageData.data[i + 2] == oldBlue) {
+            // change to your new rgb
+            imageData.data[i] = newRed;
+            imageData.data[i + 1] = newGreen;
+            imageData.data[i + 2] = newBlue;
+        }
+    }
+    // put the altered data back on the canvas
+    ctx.putImageData(imageData, 0, 0);
+    // put the re-colored image back on the image
+    var img1 = document.getElementById("image1");
+    img1.src = c.toDataURL('image/png');
+
+}
